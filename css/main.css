@@ -17,6 +17,12 @@ html {
   line-height: 1.4;
 }
 
+body {
+  background-size: 130vh;
+  background-repeat: repeat-x;
+  background-image: url('/img/background.png');
+}
+
 /*
  * Remove text-shadow in selection highlight:
  * https://twitter.com/miketaylr/status/12228805301
@@ -84,8 +90,172 @@ textarea {
 }
 
 /* ==========================================================================
-   Author's custom styles
+   Game styles
    ========================================================================== */
+
+@font-face {
+  font-family: 'Boxy-Bold';
+  src: url(../Boxy-Bold.ttf);
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  left: 50%;
+  top: calc(50% - 1.8vmin);
+  transform: translate(-50%, -50%);
+  width: 100.3vmin;
+  height: 83vmin;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(20, 4vmin);
+  grid-template-rows: repeat(20, 4vmin);
+  height: 100%;
+  width: 80.3vmin;
+  background-color: #009f00;
+  border: .9vmin solid #009f00;
+}
+
+/* This dynamic element represents the underground */
+.grid::after {
+  content: '';
+  width: 80vmin;
+  height: 2.7vmin;
+  position: absolute;
+  top: calc(85.3vmin - 2.7vmin);
+  right: 0;
+  background-color: #8a422d;
+  border: .9vmin solid #76371d;
+  border-top: none;
+}
+
+.gridcell:nth-child(even) { background-color: #009100; }
+
+.gridcell:nth-child(odd) { background-color: #008c00; }
+
+.gridcell.odd-row:nth-child(even) { background-color: #008c00; }
+
+.gridcell.odd-row:nth-child(odd) { background-color: #009100; }
+
+.gridcell {
+  box-sizing: border-box;
+  height: 4vmin;
+  width: 4vmin;
+}
+
+.sb-container {
+  display: flex;
+  flex-direction: column;
+  width: 20vmin;
+  height: 100%;
+}
+
+.score-label::before { content: 'SCORE:'; }
+
+.highscore-label::before { content: 'HIGHEST:'; }
+
+.speed-label::before { content: 'SPEED:'; }
+
+.score-label::before,
+.highscore-label::before,
+.speed-label::before {
+  color: #2480a5;
+  font-family: Boxy-Bold;
+  line-height: .2;
+  font-size: 2.3vmin;
+}
+
+.time-label, .speed-label, .score-label, .highscore-label {
+  color: #0093c4;
+  text-align: center;
+  margin: 25px 0px;
+  font-family: Boxy-Bold;
+  line-height: 0;
+}
+
+.score-label, .highscore-label, .speed-label {
+  font-size: 3.2vmin;
+  margin: 1.4vmin 0;
+}
+
+.time-label {
+  margin-top: 4vmin;
+  padding-top: 0.6vmin;
+  font-size: 4.6vmin;
+  letter-spacing: 0.35vmin;
+  color: #006182;
+  background-color: #fff;
+  border: 4px solid #006182;
+  border-right: none;
+  border-bottom: 10px solid #006182;
+  -webkit-text-stroke: 2.2px #fff;
+}
+
+.red .snake-eye::before { border: .786vmin solid #ce2121; }
+
+.snake-eye::before {
+  position: absolute;
+  content: '';
+  z-index: -1;
+  margin-left: -0.4vmin;
+  margin-top: 0.35vmin;
+  border-radius: 50%;
+  border-top-left-radius: 25%;
+  border-top-right-radius: 25%;
+}
+
+.snake-eye {
+  z-index: 99999;
+  margin-top: 1.3vmin;
+  margin-left: -5px;
+  margin-right: -5px;
+  width: .8vmin;
+  height: .8vmin;
+  border-radius: 50%;
+  border: .3vmin solid #fff;
+  border-top: -.3vmin;
+  background-color: #000;
+}
+
+.snake-head::before, .snake-head::after {
+  position: absolute;
+  content: '';
+  height: 5px;
+  width: 5px;
+  margin-top: 5px;
+  margin-left: -13px;
+  border-radius: 50%;
+  z-index: 1;
+  background-color: #c42020;
+}
+
+.snake-head::after { margin-left: 13px; }
+
+.snake-head, .snake-end {
+  display: flex;
+  justify-content: space-around;
+  gap: 50%;
+  margin: auto;
+  width: 85%;
+  height: 100%;
+}
+
+.snake-head {
+  border-top-left-radius: 50%;
+  border-top-right-radius: 50%;
+}
+
+.snake-end {
+  border-bottom-left-radius: 50%;
+  border-bottom-right-radius: 50%;
+  border-bottom: .7vmin solid rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+}
+
+.red { background-color: #ee2525; }
 
 /* ==========================================================================
    Helper classes
