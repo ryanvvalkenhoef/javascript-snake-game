@@ -17,21 +17,24 @@ const Templates = {
         const snakeParts = this.snakeParts();
         for (let y = 0; y < game.cc**0.5; y++) {
             for (let x = 0; x < game.cc**0.5; x++) {
+                let entities = [];
                 // Add snakepart if there is any that matches the cell's position
-                let snakepart;
                 const indx = snake.pos.findIndex(p => p.x == x && p.y == y); {
-                    if (indx != -1) snakepart = snakeParts[indx];
+                    if (indx != -1) entities.push(snakeParts[indx]);
                 }
+                // Add candy if it matches the cell's position
+                if (candy.pos.x == x && candy.pos.y == y && game.isOn) entities.push(this.candy());
                 const cellObj = {
                     tag: 'div',
-                    classes: (y%2) ? ['gridcell'] : ['gridcell', 'odd-row'],
+                    classes: [].concat('gridcell', (y%2) ? [] : 'odd-row'),
                     attributes: { x: x, y: y },
-                    children: [snakepart ?? []]
+                    children: entities ?? []
                 };
                 cells.push(cellObj);
             }
         }
-        return { tag: 'div', classes: ['grid'], children: cells };
+        const overlay = (!game.isOn) ? { tag: 'div', classes: ['overlay'] } : [];
+        return { tag: 'div', classes: ['grid'], children: [].concat(cells, overlay, this.pressToStart()) };
     },
     snakeBodyParts: function() {
         // Create snake bodypart objects and append to parts array
@@ -39,7 +42,7 @@ const Templates = {
         for (let i = 1; i < snake.pos.length-1; i++) {
             let object = {
                 tag: 'div',
-                classes: ['snake-body', snake.color],
+                classes: ['snake-body', snake.color, `direction-${snake.direction}`],
                 attributes: { x: snake.pos[i].x, y: snake.pos[i].y }
             };
             parts.push(object);
@@ -49,23 +52,42 @@ const Templates = {
     snakeParts: function() {
         return [].concat({
               tag: 'div',
-              classes: ['snake-head', snake.color],
+              classes: ['snake-head', snake.color, `direction-${snake.direction}`],
               children: [
+                  { tag: 'div', classes: ['snake-tongue'] },
                   { tag: 'div', classes: ['snake-eye', 'eye--first'] },
                   { tag: 'div', classes: ['snake-eye', 'eye--second'] }
               ],
               attributes: { x: snake.pos[0].x, y: snake.pos[0].y }
             },
-            (snake.len > 0) ? this.snakeBodyParts() : [],
+            (snake.pos.length > 2) ? this.snakeBodyParts() : [],
             {
               tag: 'div',
-              classes: ['snake-end', snake.color],
+              classes: ['snake-end', snake.color, `direction-${snake.direction}`],
               attributes: { 
                   x: snake.pos[snake.pos.length-1].x,
                   y: snake.pos[snake.pos.length-1].y
                 }
             }
         );
+    },
+    candy: function() {
+        return {
+            tag: 'div',
+            classes: ['candy'],
+            attributes: { x: candy.pos.x, y: candy.pos.y }
+        };
+    },
+    pressToStart: function() {
+        return {
+            tag: 'div',
+            classes: ['pts-label'],
+            children: [
+                { tag: 'p', content: 'PRESS ' },
+                { tag: 'p', content: 'OR' },
+                { tag: 'p', content: 'TO' }
+            ]
+        };
     },
     gameContainer: function() {
         return {
