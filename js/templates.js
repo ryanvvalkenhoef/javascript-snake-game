@@ -42,7 +42,7 @@ const Templates = {
         for (let i = 1; i < snake.pos.length-1; i++) {
             let object = {
                 tag: 'div',
-                classes: ['snake-body', snake.color, `direction-${snake.direction}`],
+                classes: ['snake', 'snake-body', snake.color, `direction-${snake.direction}`],
                 attributes: { x: snake.pos[i].x, y: snake.pos[i].y }
             };
             parts.push(object);
@@ -52,9 +52,8 @@ const Templates = {
     snakeParts: function() {
         return [].concat({
               tag: 'div',
-              classes: ['snake-head', snake.color, `direction-${snake.direction}`],
+              classes: ['snake', 'snake-head', snake.color, `direction-${snake.direction}`],
               children: [
-                  { tag: 'div', classes: ['snake-tongue'] },
                   { tag: 'div', classes: ['snake-eye', 'eye--first'] },
                   { tag: 'div', classes: ['snake-eye', 'eye--second'] }
               ],
@@ -63,7 +62,7 @@ const Templates = {
             (snake.pos.length > 2) ? this.snakeBodyParts() : [],
             {
               tag: 'div',
-              classes: ['snake-end', snake.color, `direction-${snake.direction}`],
+              classes: ['snake', 'snake-end', snake.color, `direction-${snake.direction}`],
               attributes: { 
                   x: snake.pos[snake.pos.length-1].x,
                   y: snake.pos[snake.pos.length-1].y

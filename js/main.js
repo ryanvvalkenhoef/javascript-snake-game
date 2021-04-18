@@ -12,7 +12,6 @@ var game = {
     gameLoop: function() {
         // Update position of snake
         snake.moveTo(snake.direction);
-        game.update();
         
         // Check if game.isOn, otherwise toggle it and hide related elements
         if (!game.isOn) {
@@ -24,8 +23,8 @@ var game = {
         }
         game.timeCounter++;
         // Logic that sets time of timeout based on the snake's speed
-        const timeoutTime = 550 - snake.pos.length * 30 - game.timeCounter / 2;
-        if (timeoutTime < 300) timeOutTime = 300;
+        const timeoutTime = 550 - snake.pos.length*30 - game.timeCounter/2;
+        if (timeoutTime < 100) timeOutTime = 100;
         game.timeOuts.push(setTimeout(game.gameLoop, timeoutTime));
     },
     clock: function() {
@@ -73,7 +72,7 @@ var snake = {
                 } else {
                     this.position.y--;
                     this.pos.pop();
-                    this.pos.splice(0, 0, this.position);
+                    this.pos.unshift({ x: this.position.x, y: this.position.y });
                 }
               break;
             case 2: // Left
@@ -84,7 +83,7 @@ var snake = {
                 } else {
                     this.position.x--;
                     this.pos.pop();
-                    this.pos.splice(0, 0, this.position);
+                    this.pos.unshift({ x: this.position.x, y: this.position.y });
                 }
               break;
             case 3: // Right
@@ -96,11 +95,10 @@ var snake = {
                 } else {
                     this.position.x++;
                     this.pos.pop();
-                    this.pos.splice(0, 0, this.position);
+                    this.pos.unshift({ x: this.position.x, y: this.position.y });
                 }
               break;
             case 4: // Down
-                console.log(game.cc**0.5-1);
                 if (this.pos[snake.pos.length-1].y == game.cc**0.5-1) {
                     this.die();
                 } else if (this.pos[0].x == candy.pos.x && this.pos[0].y+1 == candy.pos.y) {
@@ -108,11 +106,11 @@ var snake = {
                 } else {
                     this.position.y++;
                     this.pos.pop();
-                    this.pos.splice(0, 0, this.position);
+                    this.pos.unshift({ x: this.position.x, y: this.position.y });
                 }
               break;
         }
-        console.log(this.pos);
+        game.update();
     },
     die: function() {
         // Reset position of snake and candy, set highscore,
@@ -124,10 +122,12 @@ var snake = {
         game.clockTime = 0;
         game.timeOuts = [];
         game.time = "0:00";
+        this.direction = 1;
         this.pos = [{ x: snakePos().x, y: snakePos().y },
                     { x: snakePos().x, y: snakePos().y+1 }];
-        snake.speed = 1;
-        game.speed = snake.speed + " FPS";
+        this.partDircts = [1, 1];
+        this.speed = 1;
+        game.speed = this.speed + " FPS";
         game.update();
     },
     eat: function() {
@@ -135,9 +135,9 @@ var snake = {
         // add position and change speed
         candy.pos = candyPos();
         game.score++;
-        this.pos.push({ x: this.position.x, y: this.position.y });
-        snake.speed += 0.5;
-        game.speed = snake.speed + " FPS";
+        this.speed += 0.5;
+        this.pos.unshift({ x: this.position.x, y: this.position.y });
+        game.speed = this.speed + " FPS";
         game.update();
     }
 }
@@ -167,16 +167,16 @@ window.addEventListener("keydown", function(event) {
     startGame();
     switch (key) {
         case "ArrowUp":
-            snake.direction = 1;
+            if (snake.direction != 4) snake.direction = 1;
             break;
         case "ArrowLeft":
-            snake.direction = 2;
+            if (snake.direction != 3) snake.direction = 2;
             break;
         case "ArrowRight":
-            snake.direction = 3;
+            if (snake.direction != 2) snake.direction = 3;
             break;
         case "ArrowDown":
-            snake.direction = 4;
+            if (snake.direction != 1) snake.direction = 4;
             break;
     }
 })
